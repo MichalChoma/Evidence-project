@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { CistercianGlyph } from "./components/CistercianGlyph";
+import Navbar from "./components/Navbar";
 import { NumberInput } from "./components/NumberInput";
 import { parseInput } from "./lib/validation";
 
@@ -8,15 +10,13 @@ function App() {
 
   return (
     <div className="min-h-screen bg-zinc-900 text-white flex flex-col items-center justify-center gap-8 p-8">
-      <h1 className="text-3xl font-semibold tracking-tight">
-        Cyfry cysterciańskie
-      </h1>
-      <NumberInput value={raw} onChange={setRaw} />
-      {value !== null && (
-        <p className="text-zinc-400 text-sm">
-          Wybrana liczba: <span className="text-white font-mono">{value}</span>
-        </p>
-      )}
+      <Navbar />
+      <div className="grid grid-cols-2 gap-12 items-center">
+        <NumberInput value={raw} onChange={setRaw} />
+        {value !== null && (
+          <CistercianGlyph value={value} className="w-32 text-white" />
+        )}
+      </div>
     </div>
   );
 }
