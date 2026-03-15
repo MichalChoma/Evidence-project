@@ -8,8 +8,5 @@ export function parseInput(raw: string): number | null {
   return n;
 }
 
-export function isInputInvalid(raw: string): boolean {
-  if (raw === "") return false;
-  const n = parseInt(raw, 10);
-  return isNaN(n) || n < MIN || n > MAX;
-}
+export const isInputInvalid = (raw: string): boolean =>
+  raw !== "" && parseInput(raw) === null;

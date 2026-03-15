@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { CistercianGlyph } from "./components/CistercianGlyph";
-import Navbar from "./components/Navbar";
-import { NumberInput } from "./components/NumberInput";
+import { GlyphSection } from "./components/GlyphSection";
+import { InputSection } from "./components/InputSection";
+import { Navbar } from "./components/Navbar";
 import { parseInput } from "./lib/validation";
 
 function App() {
@@ -9,15 +9,18 @@ function App() {
   const value = parseInput(raw);
 
   return (
-    <div className="min-h-screen bg-zinc-900 text-white flex flex-col items-center justify-center gap-8 p-8">
+    <>
       <Navbar />
-      <div className="grid grid-cols-2 gap-12 items-center">
-        <NumberInput value={raw} onChange={setRaw} />
-        {value !== null && (
-          <CistercianGlyph value={value} className="w-32 text-white" />
-        )}
-      </div>
-    </div>
+      <main className="min-h-screen bg-zinc-900 text-white flex flex-col items-center gap-12 p-8 pt-24">
+        <h1 className="text-3xl font-semibold tracking-tight text-zinc-100">
+          Cistercian Number Translator
+        </h1>
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <InputSection value={raw} onChange={setRaw} />
+          <GlyphSection value={value} />
+        </section>
+      </main>
+    </>
   );
 }
 

@@ -1,4 +1,4 @@
-import { isInputInvalid, MAX, MIN } from '../lib/validation';
+import { isInputInvalid, MAX, MIN } from "../lib/validation";
 
 interface Props {
   value: string;
@@ -10,27 +10,31 @@ export function NumberInput({ value, onChange }: Props) {
 
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor="number-input" className="text-sm text-zinc-400">
-        Liczba ({MIN}–{MAX})
+      <label htmlFor="number-input" className="text-sm text-zinc-300">
+        Number ({MIN}–{MAX})
       </label>
       <input
         id="number-input"
         type="number"
         min={MIN}
+        aria-invalid={invalid}
         max={MAX}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="np. 1999"
+        placeholder="e.g. 1999"
         className={[
-          'w-48 rounded-lg border bg-zinc-800 px-4 py-2 text-white outline-none',
-          'focus:ring-2',
+          "w-48 rounded-lg border bg-zinc-800 px-4 py-2 text-white outline-none",
+          "placeholder:text-zinc-400",
+          "focus:ring-2",
           invalid
-            ? 'border-red-500 focus:ring-red-500'
-            : 'border-zinc-600 focus:ring-violet-500',
-        ].join(' ')}
+            ? "border-red-500 focus:ring-red-500"
+            : "border-zinc-600 focus:ring-violet-500",
+        ].join(" ")}
       />
       {invalid && (
-        <p className="text-sm text-red-400">Wpisz liczbę całkowitą od {MIN} do {MAX}</p>
+        <p role="alert" className="text-sm text-red-300">
+          Enter a number between {MIN} and {MAX}
+        </p>
       )}
     </div>
   );
