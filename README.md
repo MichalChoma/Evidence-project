@@ -1,73 +1,60 @@
-# React + TypeScript + Vite
+# Translator Liczb Cysterciańskich
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplikacja webowa do tłumaczenia liczb arabskich (0–9999) na cyfry cysterciańskie.
 
-Currently, two official plugins are available:
+## Funkcje
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Tłumaczenie w czasie rzeczywistym** — glif aktualizuje się na bieżąco podczas wpisywania
+- **Walidacja wejścia** — akceptuje tylko liczby całkowite z zakresu 0–9999
+- **Eksport SVG** — pobieranie glifu jako pliku SVG
+- **Dostępność** — zgodność z WCAG: poprawna hierarchia nagłówków, ARIA labels, `role="img"`, `aria-live` na dynamicznej treści
+- **Responsywność** — układ dwukolumnowy na desktop, jednokolumnowy na mobile
 
-## React Compiler
+## Stos technologiczny
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19 + TypeScript + Vite 8
+- Tailwind CSS v4
+- Vitest
+- Gemini do tworzenia SVG (finalnie nie skorzystałem)
+- W trakcie pracy z kodem wspomagałem się Claude Codem
 
-## Expanding the ESLint configuration
+## Uruchomienie
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm test        # testy jednostkowe
+npm run build   # build produkcyjny
 ```
+
+## Jak działa logika glifów
+
+Każda cyfra cysterciańska jest zbudowana wokół pionowego masztu. Cyfra składa się z maksymalnie czterech grup segmentów, każda odpowiadająca innemu rzędowi wielkości:
+
+| Pozycja    | Kwadrant    | Transformacja        |
+| ---------- | ----------- | -------------------- |
+| Jedności   | prawy górny | brak (base)          |
+| Dziesiątki | lewy górny  | odbicie względem X   |
+| Setki      | prawy dolny | odbicie względem Y   |
+| Tysiące    | lewy dolny  | odbicie względem X+Y |
+
+Bazowe kształty dla cyfr 1–9 zdefiniowane są raz (prawy górny kwadrant), a odpowiednie transformacje geometryczne generują pozostałe kwadranty automatycznie.
+
+## Proces powstawania
+
+Zadanie początkowo wydało mi się dość wymagające, niecodziennie dostaje się zadanie do tłumaczenia glifów. Pierwsze podejście polegało na szukaniu gotowych SVG glifów z myślą o ułożeniu ich obok siebie, potem gdy zrozumialem ich schemat myślałem o nakładaniu ich na siebie z użyciem `position: absolute` (prawy górny → jedności, lewy górny → dziesiątki itd.).
+
+W trakcie pracy z Gemini przy generowaniu SVG zrozumiałem, że wystarczy zdefiniować kształty dla cyfr 1–9, a cała reszta to matematyczne transformacje — odbicia względem osi X i Y, więc nie musiałem wcale generować osobnych segmentów dla dziesiątek czy setek a wystarczy te same kształty odpowiednio obrócić i przesunąć kodem.
+
+Rozbicie całego zadania na małe, niezależne kroki pozwoliło mi pełne zrozumienie założeń zadania.
+
+## Podsumowanie
+
+Miłe uczucie nauczyć się czegoś nowego — nawet jeśli jest to system liczbowy mnichów z XIII wieku. Przy okazji dobrze było sobie przypomnieć pracę z pobieraniem plików i operacjami na SVG, które na co dzień nie trafiają się zbyt często.
+
+Dodałem dodatkowo testy jednostkowe — uznałem te transformacje za dobre miejsce na testy, które naprawdę coś weryfikują, a nie są tylko formalnością.
+
+Po pierwszym przeczytaniu zadania nie byłem pewien, czy wyrobię się w wyznaczonym czasie, bo temat był niecodzienny. Ale rozbicie go na małe kroki sprawiło, że z pozornie trudnego stało się całkiem przyjemnym problemem do rozwiązania.
