@@ -20,6 +20,12 @@ Aplikacja webowa do tłumaczenia liczb arabskich (0–9999) na cyfry cysterciań
 
 ## Uruchomienie
 
+Wymaga Node.js >= 22.12. Jeśli używasz nvm:
+
+```bash
+nvm use
+```
+
 ```bash
 npm install
 npm run dev
